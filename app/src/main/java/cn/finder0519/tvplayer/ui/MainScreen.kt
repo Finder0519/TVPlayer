@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme as TvMaterialTheme
@@ -29,6 +30,7 @@ import cn.finder0519.tvplayer.TvPlayerController
 import cn.finder0519.tvplayer.util.QrBitmap
 
 @OptIn(ExperimentalTvMaterial3Api::class)
+@UnstableApi
 @Composable
 fun MainScreen(controller: TvPlayerController) {
     val isPlaying by controller.isPlaying
@@ -102,14 +104,14 @@ private fun HomeScreen(qrUrl: String?, statusText: String) {
     }
 }
 
-@OptIn(ExperimentalTvMaterial3Api::class)
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 private fun PlayerScreen(controller: TvPlayerController) {
     // 播放页中按下系统「返回」键：直接销毁播放器并回到二维码主页
     BackHandler(enabled = true) {
         controller.backToHome()
     }
-    val isBuffering by controller.isBuffering
+
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
@@ -117,18 +119,15 @@ private fun PlayerScreen(controller: TvPlayerController) {
                 PlayerView(ctx).apply {
                     player = controller.playerManager.exoPlayer
                     useController = true
+                    // 刚开始不自动显示播放控件，仅在用户操作后出现
+                    controllerAutoShow = true
+                    // 首次加载及播放过程中缓冲时均自动显示转圈动画
+                    setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
                 }
             },
             update = { view ->
                 view.player = controller.playerManager.exoPlayer
             },
         )
-        // 加载 / 缓冲时显示居中转圈动画
-        if (isBuffering) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center).size(72.dp),
-                color = TvMaterialTheme.colorScheme.primary,
-            )
-        }
     }
 }
