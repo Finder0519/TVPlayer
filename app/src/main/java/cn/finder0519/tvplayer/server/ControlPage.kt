@@ -80,11 +80,11 @@ object ControlPage {
         </div>
         <div>
           <label for="proxyPort">端口</label>
-          <input type="number" id="proxyPort" placeholder="8080">
+          <input type="number" id="proxyPort" placeholder="18000" value="18000">
         </div>
       </div>
       <label for="proxyHost">代理地址</label>
-      <input type="text" id="proxyHost" placeholder="192.168.1.100 或 host" autocomplete="off">
+      <input type="text" id="proxyHost" placeholder="192.168.31.2" value="192.168.31.2" autocomplete="off">
     </div>
 
     <button id="playBtn">▶ 播放</button>
