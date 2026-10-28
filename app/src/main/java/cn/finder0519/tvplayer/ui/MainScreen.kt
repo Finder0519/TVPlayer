@@ -115,10 +115,13 @@ private fun PlayerScreen(controller: TvPlayerController) {
                 PlayerView(ctx).apply {
                     player = controller.playerManager.exoPlayer
                     useController = true
+                    // 刚进入播放页时直接显示默认控件，允许暂停/播放
+                    showController()
                 }
             },
             update = { view ->
                 view.player = controller.playerManager.exoPlayer
+                view.showController()
             },
         )
     }
