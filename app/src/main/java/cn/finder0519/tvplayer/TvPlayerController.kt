@@ -29,6 +29,9 @@ class TvPlayerController(private val context: Context) {
     /** 是否正在播放 */
     val isPlaying = mutableStateOf(false)
 
+    /** 是否正在加载 / 缓冲（用于显示居中转圈动画） */
+    val isBuffering = mutableStateOf(false)
+
     /** 展示给电视界面的状态文本 */
     val statusText = mutableStateOf("")
 
@@ -61,6 +64,7 @@ class TvPlayerController(private val context: Context) {
         server = null
         playerManager.stop()
         isPlaying.value = false
+        isBuffering.value = false
     }
 
     /**
@@ -68,6 +72,7 @@ class TvPlayerController(private val context: Context) {
     fun backToHome() {
         playerManager.stop()
         isPlaying.value = false
+        isBuffering.value = false
         statusText.value = "播放已停止"
     }
 
@@ -79,8 +84,12 @@ class TvPlayerController(private val context: Context) {
                     Toast.makeText(context.applicationContext, "播放失败", Toast.LENGTH_LONG).show()
                     playerManager.stop()
                     isPlaying.value = false
+                    isBuffering.value = false
                     statusText.value = "播放失败：${request.url}"
                 }
+            }
+            playerManager.onBufferingChanged = { buffering ->
+                mainHandler.post { isBuffering.value = buffering }
             }
             playerManager.play(request)
             isPlaying.value = true

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -108,6 +109,7 @@ private fun PlayerScreen(controller: TvPlayerController) {
     BackHandler(enabled = true) {
         controller.backToHome()
     }
+    val isBuffering by controller.isBuffering
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
@@ -115,14 +117,18 @@ private fun PlayerScreen(controller: TvPlayerController) {
                 PlayerView(ctx).apply {
                     player = controller.playerManager.exoPlayer
                     useController = true
-                    // 刚进入播放页时直接显示默认控件，允许暂停/播放
-                    showController()
                 }
             },
             update = { view ->
                 view.player = controller.playerManager.exoPlayer
-                view.showController()
             },
         )
+        // 加载 / 缓冲时显示居中转圈动画
+        if (isBuffering) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center).size(72.dp),
+                color = TvMaterialTheme.colorScheme.primary,
+            )
+        }
     }
 }

@@ -27,6 +27,9 @@ class PlayerManager(private val context: Context) {
     /** 播放加载失败时的回调（只会回调一次）。 */
     var onPlayerError: (() -> Unit)? = null
 
+    /** 缓冲状态变化回调（true = 正在加载/缓冲）。 */
+    var onBufferingChanged: ((Boolean) -> Unit)? = null
+
     private var errorNotified = false
 
     private val listener = object : Player.Listener {
@@ -35,6 +38,10 @@ class PlayerManager(private val context: Context) {
                 errorNotified = true
                 onPlayerError?.invoke()
             }
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            onBufferingChanged?.invoke(playbackState == Player.STATE_BUFFERING)
         }
     }
 
