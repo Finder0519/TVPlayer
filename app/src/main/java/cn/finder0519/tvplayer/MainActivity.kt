@@ -4,16 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.tv.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
+import cn.finder0519.tvplayer.ui.MainScreen
 import cn.finder0519.tvplayer.ui.theme.TVPlayerTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val controller: TvPlayerController by lazy { TvPlayerController(this) }
+
     @OptIn(ExperimentalTvMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,25 +24,19 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     shape = RectangleShape
                 ) {
-                    Greeting("Android")
+                    MainScreen(controller)
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onResume() {
+        super.onResume()
+        controller.start()
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TVPlayerTheme {
-        Greeting("Android")
+    override fun onPause() {
+        controller.stop()
+        super.onPause()
     }
 }
