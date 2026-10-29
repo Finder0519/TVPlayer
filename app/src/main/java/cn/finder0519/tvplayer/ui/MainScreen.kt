@@ -122,6 +122,8 @@ private fun PlayerScreen(controller: TvPlayerController) {
                     controllerAutoShow = true
                     // 首次加载及播放过程中缓冲时均自动显示转圈动画
                     setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
+                    // 播放页保持屏幕常亮，禁止系统休眠
+                    keepScreenOn = true
                 }
             },
             update = { view ->
