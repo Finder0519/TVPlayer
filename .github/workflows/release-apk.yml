@@ -65,7 +65,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ steps.version.outputs.tag }}" \
-            app/build/outputs/apk/release/app-release.apk \
+          apk=$(find app/build/outputs/apk/release -name '*.apk' -type f | sort | head -n 1)
+          if [ -z "$apk" ]; then
+            echo "No APK found under app/build/outputs/apk/release" >&2
+            exit 1
+          fi
+          echo "Uploading APK: $apk"
+          gh release create "${{ steps.version.outputs.tag }}" "$apk" \
             --title "${{ steps.version.outputs.tag }}" \
             --generate-notes
