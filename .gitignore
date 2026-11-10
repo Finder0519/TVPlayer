@@ -23,5 +23,8 @@ captures/
 *.dex
 app/release/
 
+# ---- Signing material (never commit) ----
+signing/
+
 # ---- Logs / misc ----
 *.log

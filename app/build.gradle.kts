@@ -1,3 +1,5 @@
+import java.io.File
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -20,8 +22,28 @@ android {
 
     }
 
+    signingConfigs {
+        create("release") {
+            // CI 中通过环境变量注入签名信息（GitHub Secrets → workflow 导出）。
+            // 本地开发未设环境变量时回退到 debug keystore，保证本地也能构建。
+            val storeFileEnv = System.getenv("KEYSTORE_PATH")?.let { File(it) }
+            if (storeFileEnv != null && storeFileEnv.exists()) {
+                storeFile = storeFileEnv
+                storePassword = System.getenv("KEY_STORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            } else {
+                storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }

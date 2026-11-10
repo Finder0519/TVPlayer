@@ -33,6 +33,25 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # 从 GitHub Secrets 解码 release keystore，并导出签名环境变量供 assembleRelease 使用。
+      - name: Set up release signing keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > "$RUNNER_TEMP/release.keystore"
+          echo "KEYSTORE_PATH=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
+          echo "KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }}" >> "$GITHUB_ENV"
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> "$GITHUB_ENV"
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> "$GITHUB_ENV"
+
+      - name: Verify keystore written
+        run: |
+          if [ ! -s "$RUNNER_TEMP/release.keystore" ]; then
+            echo "Keystore is empty/missing. Check KEYSTORE_BASE64 secret." >&2
+            exit 1
+          fi
+          keytool -list -keystore "$RUNNER_TEMP/release.keystore" \
+            -storepass "${{ secrets.KEY_STORE_PASSWORD }}" \
+            -alias "${{ secrets.KEY_ALIAS }}" 2>&1 | head -5
+
       - name: Setup Gradle with cache
         uses: gradle/actions/setup-gradle@v4
 
