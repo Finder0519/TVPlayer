@@ -117,9 +117,8 @@ private fun PlayerScreen(controller: TvPlayerController) {
             factory = { ctx ->
                 PlayerView(ctx).apply {
                     player = controller.playerManager.exoPlayer
-                    useController = true
-                    // 刚开始不自动显示播放控件，仅在用户操作后出现
-                    controllerAutoShow = true
+                    // 不使用 ExoPlayer 默认播放控件，保持纯视频画面
+                    useController = false
                     // 首次加载及播放过程中缓冲时均自动显示转圈动画
                     setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
                     // 播放页保持屏幕常亮，禁止系统休眠
