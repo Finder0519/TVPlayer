@@ -1,16 +1,16 @@
 [versions]
-agp = "9.1.1"
-coreKtx = "1.10.1"
-appcompat = "1.6.1"
-kotlin = "2.0.21"
-composeBom = "2024.09.00"
-tvFoundation = "1.0.0-alpha07"
-tvMaterial = "1.0.0-alpha07"
-lifecycleRuntimeKtx = "2.6.1"
-activityCompose = "1.8.0"
-media3 = "1.4.0"
+agp = "9.3.3"
+coreKtx = "1.19.1"
+appcompat = "1.8.0"
+kotlin = "2.4.21"
+composeBom = "2026.11.01"
+tvFoundation = "1.0.0"
+tvMaterial = "1.1.0"
+lifecycleRuntimeKtx = "2.11.1"
+activityCompose = "1.13.0"
+media3 = "1.11.1"
 nanohttpd = "2.3.1"
-zxing = "3.5.3"
+zxing = "3.5.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

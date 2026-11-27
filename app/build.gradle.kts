@@ -8,14 +8,14 @@ plugins {
 android {
     namespace = "cn.finder0519.tvplayer"
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
 
     defaultConfig {
         applicationId = "cn.finder0519.tvplayer"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
